@@ -2,6 +2,7 @@ import os
 from ultralytics import YOLO
 from PIL import Image
 import tempfile
+from enum import Enum
 
 # FastAPI imports
 from fastapi import FastAPI, File, UploadFile, Form
@@ -15,13 +16,24 @@ OUTPUT_DIR = "yolo_test_results"
 FOLDS = 5
 MODEL_NAMES = ["best.pt", "last.pt"]
 
+class Fold(int, Enum):
+    fold_0 = 0
+    fold_1 = 1
+    fold_2 = 2
+    fold_3 = 3
+    fold_4 = 4
+
+class ModelName(str, Enum):
+    best = "best.pt"
+    last = "last.pt"
+
 app = FastAPI()
 
 @app.post("/predict")
 async def predict(
     file: UploadFile = File(...),
-    fold: int = Form(0),
-    model_name: str = Form("best.pt")
+    fold: Fold = Form(Fold.fold_0),
+    model_name: ModelName = Form(ModelName.best)
 ):
     # Save uploaded file to a temp location
     with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp:
