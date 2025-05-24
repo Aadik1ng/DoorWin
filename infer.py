@@ -41,7 +41,7 @@ async def predict(
         tmp_path = tmp.name
 
     # Load model
-    model_path = f"kfold_yolo/fold_{fold}/runs/detect/weights/{model_name}"
+    model_path = f"kfold_yolo/fold_{fold.value}/runs/detect/weights/{model_name.value}"
     if not os.path.exists(model_path):
         return {"error": f"Model not found: {model_path}"}
     model = YOLO(model_path)
